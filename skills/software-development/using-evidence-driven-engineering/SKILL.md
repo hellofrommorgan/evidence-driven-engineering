@@ -34,6 +34,7 @@ Before answering or acting on any software-engineering request that may involve 
 | Git branch/worktree/cleanup/destructive operation | `git-safety-and-guardrails` |
 | Issue queue or bug/enhancement classification | `triage-queue-management` |
 | Writing or modifying skills/process docs | `skill-authoring-tdd` |
+| Probing what a frontier model can do, building agent scaffolding, or fanning out parallel agents | `frontier-probing` |
 | Unclear, too hard, or decision needs human input | `failure-vocabulary` |
 
 ## Iron law
@@ -50,6 +51,7 @@ Use the smallest stack that covers the work, in this order:
 - Delegated work: `design-planning` → `subagent-orchestration` → `two-stage-code-review` → controller `verification-honesty`.
 - Git operation: `git-safety-and-guardrails` before any mutating git command; `verification-honesty` before reporting branch readiness.
 - Communication/review response: `communication-integrity`; for code review also `two-stage-code-review`.
+- Frontier capability probe: `frontier-probing` → `falsifiable-goals` → `subagent-orchestration` if fanning out → `verification-honesty` before any completion claim.
 
 For non-trivial work, final responses include either `Skills used: [...]` or `Skills not used: [reason]`.
 

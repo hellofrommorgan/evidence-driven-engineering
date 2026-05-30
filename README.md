@@ -19,6 +19,7 @@ Start with `using-evidence-driven-engineering`.
 | Bugs and failed builds | `diagnostic-debugging` |
 | Refactors and seams | `architecture-deepening` |
 | Completion claims | `verification-honesty` |
+| Probing frontier capability / capability spikes | `frontier-probing` |
 | Delegation and handoffs | `subagent-orchestration` |
 | Review | `two-stage-code-review` |
 | Git safety | `git-safety-and-guardrails` |

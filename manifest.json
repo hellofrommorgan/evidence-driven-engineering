@@ -42,7 +42,8 @@
       "falsifiable-goals",
       "test-driven-development",
       "verification-honesty",
-      "architecture-deepening"
+      "architecture-deepening",
+      "frontier-probing"
     ]
   },
   {
@@ -63,7 +64,20 @@
     "related": [
       "intent-alignment",
       "test-driven-development",
-      "verification-honesty"
+      "verification-honesty",
+      "frontier-probing"
+    ]
+  },
+  {
+    "name": "frontier-probing",
+    "path": "skills/software-development/frontier-probing/SKILL.md",
+    "description_len": 238,
+    "chars": 5626,
+    "related": [
+      "falsifiable-goals",
+      "verification-honesty",
+      "subagent-orchestration",
+      "diagnostic-debugging"
     ]
   },
   {
@@ -108,7 +122,8 @@
       "design-planning",
       "two-stage-code-review",
       "verification-honesty",
-      "failure-vocabulary"
+      "failure-vocabulary",
+      "frontier-probing"
     ]
   },
   {
@@ -177,7 +192,8 @@
     "related": [
       "falsifiable-goals",
       "test-driven-development",
-      "diagnostic-debugging"
+      "diagnostic-debugging",
+      "frontier-probing"
     ]
   }
 ]
