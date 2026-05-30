@@ -59,17 +59,15 @@ Before fanning out parallel agents:
 
 ## Anti-rationalization table
 
-Mined from real failure transcripts.
-
 | Rationalization | Correction |
 |---|---|
-| "Extremely urgent, no corners cut, just fix all of them." | Intensity is not a spec. Write the invariant (Gate 2) first; urgency adjectives don't constrain output. |
-| "I have unlimited free tokens, maximize parallelism." | Unbounded scope is how 701 cards happen. Specify the stopping condition, not the throttle. |
-| "It's done — the receipt/toast is green." | Green is a claim. Show the diff between intended and actual. |
+| "It's urgent, no corners cut — just handle all of it." | Intensity is not a spec. Write the invariant (Gate 2) first; urgency adjectives don't constrain output. |
+| "Tokens are cheap, so maximize parallelism / scope." | Unbounded scope produces work faster than you can verify it. Specify the stopping condition, not the throttle. |
+| "It reported success, so it's done." | A reported status is a claim. Show the diff between intended and actual. |
 | "I'll verify once all the work is complete." | That inversion is the bug this skill exists to kill. The check gates "complete." |
 | "Let me build the scaffolding first, then test the model." | Spike first (Gate 1). You may be hardening a weakness that doesn't exist. |
 | "More agents will get there faster." | Integration is the bottleneck, not agent count. Measure convergence before widening. |
-| "I caught the contamination by diffing by hand, so it's fine." | Manual catch means the loop isn't closed. Automate the eyeballs or cap fan-out. |
+| "I caught the problem by inspecting output manually, so it's fine." | A manual catch means the loop isn't closed. Automate the check or cap fan-out. |
 
 ## Verification checklist
 
