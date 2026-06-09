@@ -6,7 +6,7 @@ author: Morgan Wilson
 metadata:
   hermes:
     tags: [planning, design, vertical-slice, execution]
-    related_skills: [intent-alignment, falsifiable-goals, subagent-orchestration, test-driven-development]
+    related_skills: [intent-alignment, subagent-orchestration, test-driven-development]
 ---
 
 # Design Planning

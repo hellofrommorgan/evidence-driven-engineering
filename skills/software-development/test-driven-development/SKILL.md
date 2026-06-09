@@ -6,7 +6,7 @@ author: Morgan Wilson
 metadata:
   hermes:
     tags: [tdd, testing, red-green-refactor]
-    related_skills: [falsifiable-goals, surgical-changes, verification-honesty, architecture-deepening]
+    related_skills: [intent-alignment, surgical-changes, verification-honesty, architecture-deepening]
 ---
 
 # Test-Driven Development

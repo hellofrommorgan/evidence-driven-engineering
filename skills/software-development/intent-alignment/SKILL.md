@@ -1,12 +1,12 @@
 ---
 name: intent-alignment
-description: "Use when requirements, vocabulary, priorities, or user intent are not fully pinned down; surfaces ambiguity, recommends defaults, and maintains glossary/ADR-quality shared language."
-version: 1.0.0
+description: "Use when requirements, vocabulary, priorities, or intent are not pinned down, or when a request is imperative/vague/outcome-oriented; surfaces ambiguity, recommends defaults, maintains glossary/ADR language, and converts imperatives into falsifiable goals with verifiable feedback loops."
+version: 1.1.0
 author: Morgan Wilson
 metadata:
   hermes:
-    tags: [intent, requirements, glossary, adr]
-    related_skills: [failure-vocabulary, design-planning, architecture-deepening, communication-integrity]
+    tags: [intent, requirements, glossary, adr, goals, feedback, success-criteria]
+    related_skills: [failure-vocabulary, design-planning, architecture-deepening, test-driven-development, verification-honesty]
 ---
 
 # Intent Alignment
@@ -111,6 +111,33 @@ I can interpret it as A or B.
 I recommend A because [reason].
 Please confirm or override before I change files.
 ```
+
+## Falsifiable goals
+
+Once intent is pinned, convert the user's words into a loop that can fail, then make it pass. Confidence is not a deliverable; a falsifiable goal is.
+
+| User says | Agent goal |
+|---|---|
+| "Add validation" | Write failing tests for invalid inputs, then make them pass. |
+| "Fix the bug" | Create a reproducer that fails, then make it pass. |
+| "Refactor X" | Capture current behavior, change structure, verify behavior is unchanged. |
+| "Make it faster" | Capture baseline metric, set target, improve, re-measure. |
+| "Clean this up" | Define allowed cleanup scope and diff audit, then edit. |
+| "Support Y" | One vertical slice that proves Y works through the public interface. |
+
+For every non-trivial task, write this before editing:
+
+```text
+Goal: [observable outcome]
+Loop: [command/manual check that fails before and passes after]
+Scope: [files/features allowed to change]
+Non-goals: [nearby tempting work explicitly excluded]
+Verification: [fresh command/evidence required before completion claim]
+```
+
+Choose the fastest deterministic loop that proves the goal: (1) single unit/behavior test, (2) focused integration test, (3) CLI command/script with expected output, (4) browser/API check with exact steps, (5) repro script for flaky behavior, (6) human-in-the-loop only when automation is impossible. If no loop can be built, that is a finding — escalate to `architecture-deepening` or `failure-vocabulary`; do not guess.
+
+A goal is ready when a fresh agent can run it without session history, it has a pass/fail result or measurable threshold, it excludes adjacent work, and it can be used as review input.
 
 ## Anti-rationalization table
 

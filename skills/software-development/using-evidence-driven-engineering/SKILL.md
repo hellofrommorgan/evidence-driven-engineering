@@ -6,7 +6,7 @@ author: Morgan Wilson
 metadata:
   hermes:
     tags: [bootstrap, routing, discipline]
-    related_skills: [intent-alignment, falsifiable-goals, verification-honesty, failure-vocabulary, communication-integrity]
+    related_skills: [intent-alignment, verification-honesty, failure-vocabulary]
 ---
 
 # Using Evidence-Driven Engineering
@@ -20,21 +20,18 @@ Before answering or acting on any software-engineering request that may involve 
 
 | Situation | Load |
 |---|---|
-| User asks for a change and intent has >1 plausible interpretation | `intent-alignment` |
-| User gives an imperative like "fix", "add", "refactor", "make it work" | `falsifiable-goals` |
+| User asks for a change and intent has >1 plausible interpretation, or gives an imperative like "fix", "add", "refactor", "make it work" | `intent-alignment` |
 | Multi-step implementation, config change, migration, feature, or refactor | `design-planning` |
 | Editing existing code | `surgical-changes`; if abstraction/seam/refactor is tempting, also load `architecture-deepening` |
 | Any production-code change where tests are possible | `test-driven-development` |
 | Bug, flaky test, failed build, incident, surprising behavior | `diagnostic-debugging` |
 | Refactor, architecture complaint, testability complaint, pass-through modules | `architecture-deepening` |
-| About to claim completion | `verification-honesty` |
-| Receiving correction, agreeing/disagreeing, responding to praise/blame, or review communication | `communication-integrity` |
+| About to claim completion, or receiving correction / agreeing/disagreeing / responding to praise/blame / review communication | `verification-honesty` |
 | Delegating work or preserving controller context | `subagent-orchestration` |
 | Reviewing code or receiving review feedback | `two-stage-code-review` |
 | Git branch/worktree/cleanup/destructive operation | `git-safety-and-guardrails` |
 | Issue queue or bug/enhancement classification | `triage-queue-management` |
 | Writing or modifying skills/process docs | `skill-authoring-tdd` |
-| Probing what a frontier model can do, building agent scaffolding, or fanning out parallel agents | `frontier-probing` |
 | Unclear, too hard, or decision needs human input | `failure-vocabulary` |
 
 ## Iron law
@@ -45,13 +42,12 @@ If a skill applies, you do not summarize it from memory. Use it.
 
 Use the smallest stack that covers the work, in this order:
 
-- Feature/change: `intent-alignment` if ambiguous → `falsifiable-goals` → `design-planning` → `test-driven-development` → `surgical-changes` → `verification-honesty` → `two-stage-code-review`.
+- Feature/change: `intent-alignment` (pins intent and falsifiable goal) → `design-planning` → `test-driven-development` → `surgical-changes` → `verification-honesty` → `two-stage-code-review`.
 - Bug/failed test: `diagnostic-debugging` → `test-driven-development` for regression → `surgical-changes` → `verification-honesty`.
-- Refactor/architecture: `falsifiable-goals` → `architecture-deepening` → `test-driven-development`/behavior capture → `surgical-changes` → `verification-honesty`.
+- Refactor/architecture: `intent-alignment` → `architecture-deepening` → `test-driven-development`/behavior capture → `surgical-changes` → `verification-honesty`.
 - Delegated work: `design-planning` → `subagent-orchestration` → `two-stage-code-review` → controller `verification-honesty`.
 - Git operation: `git-safety-and-guardrails` before any mutating git command; `verification-honesty` before reporting branch readiness.
-- Communication/review response: `communication-integrity`; for code review also `two-stage-code-review`.
-- Frontier capability probe: `frontier-probing` → `falsifiable-goals` → `subagent-orchestration` if fanning out → `verification-honesty` before any completion claim.
+- Communication/review response: `verification-honesty`; for code review also `two-stage-code-review`.
 
 For non-trivial work, final responses include either `Skills used: [...]` or `Skills not used: [reason]`.
 

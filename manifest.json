@@ -11,24 +11,12 @@
     ]
   },
   {
-    "name": "communication-integrity",
-    "path": "skills/software-development/communication-integrity/SKILL.md",
-    "description_len": 197,
-    "chars": 2875,
-    "related": [
-      "verification-honesty",
-      "two-stage-code-review",
-      "failure-vocabulary"
-    ]
-  },
-  {
     "name": "design-planning",
     "path": "skills/software-development/design-planning/SKILL.md",
     "description_len": 165,
-    "chars": 3667,
+    "chars": 3648,
     "related": [
       "intent-alignment",
-      "falsifiable-goals",
       "subagent-orchestration",
       "test-driven-development"
     ]
@@ -37,47 +25,22 @@
     "name": "diagnostic-debugging",
     "path": "skills/software-development/diagnostic-debugging/SKILL.md",
     "description_len": 202,
-    "chars": 3259,
+    "chars": 3258,
     "related": [
-      "falsifiable-goals",
+      "intent-alignment",
       "test-driven-development",
       "verification-honesty",
-      "architecture-deepening",
-      "frontier-probing"
+      "architecture-deepening"
     ]
   },
   {
     "name": "failure-vocabulary",
     "path": "skills/software-development/failure-vocabulary/SKILL.md",
     "description_len": 217,
-    "chars": 2566,
+    "chars": 2563,
     "related": [
       "intent-alignment",
-      "communication-integrity"
-    ]
-  },
-  {
-    "name": "falsifiable-goals",
-    "path": "skills/software-development/falsifiable-goals/SKILL.md",
-    "description_len": 158,
-    "chars": 2870,
-    "related": [
-      "intent-alignment",
-      "test-driven-development",
-      "verification-honesty",
-      "frontier-probing"
-    ]
-  },
-  {
-    "name": "frontier-probing",
-    "path": "skills/software-development/frontier-probing/SKILL.md",
-    "description_len": 238,
-    "chars": 5626,
-    "related": [
-      "falsifiable-goals",
-      "verification-honesty",
-      "subagent-orchestration",
-      "diagnostic-debugging"
+      "verification-honesty"
     ]
   },
   {
@@ -93,20 +56,21 @@
   {
     "name": "intent-alignment",
     "path": "skills/software-development/intent-alignment/SKILL.md",
-    "description_len": 181,
-    "chars": 4387,
+    "description_len": 287,
+    "chars": 6192,
     "related": [
       "failure-vocabulary",
       "design-planning",
       "architecture-deepening",
-      "communication-integrity"
+      "test-driven-development",
+      "verification-honesty"
     ]
   },
   {
     "name": "skill-authoring-tdd",
     "path": "skills/software-development/skill-authoring-tdd/SKILL.md",
     "description_len": 198,
-    "chars": 3542,
+    "chars": 3634,
     "related": [
       "using-evidence-driven-engineering",
       "verification-honesty",
@@ -122,17 +86,16 @@
       "design-planning",
       "two-stage-code-review",
       "verification-honesty",
-      "failure-vocabulary",
-      "frontier-probing"
+      "failure-vocabulary"
     ]
   },
   {
     "name": "surgical-changes",
     "path": "skills/software-development/surgical-changes/SKILL.md",
     "description_len": 141,
-    "chars": 3294,
+    "chars": 3293,
     "related": [
-      "falsifiable-goals",
+      "intent-alignment",
       "architecture-deepening",
       "verification-honesty"
     ]
@@ -141,9 +104,9 @@
     "name": "test-driven-development",
     "path": "skills/software-development/test-driven-development/SKILL.md",
     "description_len": 176,
-    "chars": 3619,
+    "chars": 3618,
     "related": [
-      "falsifiable-goals",
+      "intent-alignment",
       "surgical-changes",
       "verification-honesty",
       "architecture-deepening"
@@ -153,47 +116,45 @@
     "name": "triage-queue-management",
     "path": "skills/software-development/triage-queue-management/SKILL.md",
     "description_len": 180,
-    "chars": 2708,
+    "chars": 2705,
     "related": [
       "intent-alignment",
       "failure-vocabulary",
-      "communication-integrity"
+      "verification-honesty"
     ]
   },
   {
     "name": "two-stage-code-review",
     "path": "skills/software-development/two-stage-code-review/SKILL.md",
     "description_len": 176,
-    "chars": 3160,
+    "chars": 2960,
     "related": [
       "surgical-changes",
-      "verification-honesty",
-      "communication-integrity"
+      "verification-honesty"
     ]
   },
   {
     "name": "using-evidence-driven-engineering",
     "path": "skills/software-development/using-evidence-driven-engineering/SKILL.md",
     "description_len": 179,
-    "chars": 4982,
+    "chars": 4879,
     "related": [
       "intent-alignment",
-      "falsifiable-goals",
       "verification-honesty",
-      "failure-vocabulary",
-      "communication-integrity"
+      "failure-vocabulary"
     ]
   },
   {
     "name": "verification-honesty",
     "path": "skills/software-development/verification-honesty/SKILL.md",
-    "description_len": 172,
-    "chars": 3065,
+    "description_len": 264,
+    "chars": 4883,
     "related": [
-      "falsifiable-goals",
+      "intent-alignment",
       "test-driven-development",
       "diagnostic-debugging",
-      "frontier-probing"
+      "two-stage-code-review",
+      "failure-vocabulary"
     ]
   }
 ]

@@ -6,7 +6,7 @@ author: Morgan Wilson
 metadata:
   hermes:
     tags: [triage, issues, queue, state-machine]
-    related_skills: [intent-alignment, failure-vocabulary, communication-integrity]
+    related_skills: [intent-alignment, failure-vocabulary, verification-honesty]
 ---
 
 # Triage Queue Management

@@ -11,21 +11,18 @@ Start with `using-evidence-driven-engineering`.
 | Phase / risk | Skill |
 |---|---|
 | Routing | `using-evidence-driven-engineering` |
-| Intent, ambiguity, vocabulary | `intent-alignment` |
-| Turning requests into pass/fail loops | `falsifiable-goals` |
+| Intent, ambiguity, vocabulary, falsifiable goals | `intent-alignment` |
 | Specs and vertical-slice plans | `design-planning` |
 | Small scoped diffs | `surgical-changes` |
 | RED/GREEN/REFACTOR | `test-driven-development` |
 | Bugs and failed builds | `diagnostic-debugging` |
 | Refactors and seams | `architecture-deepening` |
-| Completion claims | `verification-honesty` |
-| Probing frontier capability / capability spikes | `frontier-probing` |
+| Completion claims, anti-sycophancy | `verification-honesty` |
 | Delegation and handoffs | `subagent-orchestration` |
 | Review | `two-stage-code-review` |
 | Git safety | `git-safety-and-guardrails` |
 | Issue queues | `triage-queue-management` |
 | Skill writing | `skill-authoring-tdd` |
-| Anti-sycophancy | `communication-integrity` |
 | Uncertainty / capability stops | `failure-vocabulary` |
 
 

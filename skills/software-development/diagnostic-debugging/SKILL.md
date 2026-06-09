@@ -6,7 +6,7 @@ author: Morgan Wilson
 metadata:
   hermes:
     tags: [debugging, diagnosis, root-cause, feedback-loop]
-    related_skills: [falsifiable-goals, test-driven-development, verification-honesty, architecture-deepening]
+    related_skills: [intent-alignment, test-driven-development, verification-honesty, architecture-deepening]
 ---
 
 # Diagnostic Debugging

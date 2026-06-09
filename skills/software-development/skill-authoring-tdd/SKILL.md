@@ -44,14 +44,7 @@ Skill must block with: TDD/verification gate.
 
 ## GREEN: minimal skill
 
-Write the smallest skill that changes behavior:
-
-- Trigger conditions.
-- Iron law or hard gate.
-- Step-by-step runnable process.
-- Anti-rationalization table mapping observed excuses to corrections.
-- Verification checklist.
-- One excellent example if useful.
+Write the smallest skill that changes behavior, following the Skill structure below. Its load-bearing parts are the trigger conditions, an iron law or hard gate, a runnable step-by-step process, an anti-rationalization table mapping observed excuses to corrections, and a verification checklist — plus one excellent example only if it earns its space.
 
 ## REFACTOR: close loopholes
 

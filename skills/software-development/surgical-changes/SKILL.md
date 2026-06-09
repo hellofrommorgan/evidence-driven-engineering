@@ -6,7 +6,7 @@ author: Morgan Wilson
 metadata:
   hermes:
     tags: [diff, surgical, yagni, style]
-    related_skills: [falsifiable-goals, architecture-deepening, verification-honesty]
+    related_skills: [intent-alignment, architecture-deepening, verification-honesty]
 ---
 
 # Surgical Changes

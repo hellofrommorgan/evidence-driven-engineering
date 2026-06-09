@@ -6,7 +6,7 @@ author: Morgan Wilson
 metadata:
   hermes:
     tags: [failure, uncertainty, decision, escalation]
-    related_skills: [intent-alignment, communication-integrity]
+    related_skills: [intent-alignment, verification-honesty]
 ---
 
 # Failure Vocabulary
