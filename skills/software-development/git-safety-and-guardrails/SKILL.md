@@ -75,6 +75,98 @@ Before `git merge` or equivalent branch integration:
 5. If the merge is user-requested and status is safe, proceed; otherwise present the finishing branch menu.
 6. After merge, inspect conflicts/status and rerun verification before claiming readiness.
 
+## Direct main push when explicitly requested
+
+When Morgan explicitly asks to clean up a repo and push `main`, treat that as authorization for the non-force push, but still run the provenance and inclusion gates first.
+
+If HTTPS git operations fail non-interactively even though `gh auth status` is valid, use `references/github-https-gh-askpass.md`: bridge Git to `gh auth token` through a temporary `GIT_ASKPASS` helper without printing the token, then keep the normal fetch/push verification gates.
+
+Direct-main protocol:
+
+1. Inspect repo/root/branch/remotes/worktrees/status and ahead/behind:
+   - `git rev-parse --show-toplevel`
+   - `git branch --show-current`
+   - `git remote -v`
+   - `git worktree list`
+   - `git status --short --branch`
+   - `git fetch origin && git rev-list --left-right --count origin/main...HEAD`
+2. Classify dirty and untracked files before staging. Include intentional source/tests/docs/scripts; exclude runtime state, DBs, logs, generated local data, dependency folders, and env/credential files.
+3. Prove representative exclusions with `git check-ignore -v` where runtime/local artifacts exist.
+4. Scan staged source-like files for credential-shaped literals before committing.
+5. Run relevant verification and `git diff --cached --check`; inspect `git diff --cached --stat` and `git status --short --branch`.
+6. Commit with a conventional message on `main`.
+7. Push with plain `git push origin main` only — never force-push unless separately and explicitly requested.
+8. Verify remote alignment after push with `git fetch origin`, `git rev-list --left-right --count origin/main...HEAD` expecting `0 0`, and `git log -1 --oneline --decorate` showing `origin/main` at `HEAD`.
+
+## Organizing large uncommitted research surfaces
+
+When the user asks to organize and commit a large mixed research/prototype surface, treat it as provenance + inclusion control, not a blind `git add .`:
+
+1. Inspect repo/root/branch/worktrees/status first:
+   - `git rev-parse --show-toplevel`
+   - `git branch --show-current`
+   - `git rev-parse --git-common-dir`
+   - `git worktree list`
+   - `git status --short`
+2. Inventory both tracked diffs and untracked files:
+   - `git diff --stat`
+   - `git diff --name-only`
+   - `git ls-files --others --exclude-standard`
+   - optionally `du -sh` on large new directories.
+3. Classify before staging:
+   - Commit source, tests, docs, lockfiles, plans, and intentional scripts.
+   - Keep runtime receipts, local state, logs, build output, dependency folders, and env files out of the commit.
+   - Add or verify ignore rules before staging generated/runtime artifacts.
+4. Prove exclusions with `git check-ignore -v` for representative ignored files such as `.env.local`, runtime stores, watcher state/logs, `dist/`, and `node_modules/`.
+5. Scan staged/untracked source-like files for likely secrets before commit. Treat placeholder/dev tokens and security vocabulary as review findings, not automatic blockers, but never commit real credentials.
+6. Stage only after classification is complete. `git add -A` is acceptable when ignore rules and `git check-ignore -v` prove excluded artifacts are protected.
+7. Before committing, run relevant verification plus `git diff --cached --check`, then inspect `git diff --cached --stat` and `git status --short`.
+8. After commit, run `git status --short`, `git rev-parse --short HEAD`, and `git log -1 --oneline --stat --summary` before claiming the worktree is clean and naming the commit.
+
+Do not use destructive cleanup (`git clean`, `reset --hard`, deleting directories) to make the surface look tidy unless the user explicitly requests it and the destructive confirmation protocol has been satisfied.
+
+## Syncing to upstream / fork-divergence (stash, fast-forward, rescue)
+
+For "sync our repo to the source repo and don't lose local changes" or
+"what changes do we have relative to the source," see
+`references/stash-fastforward-fork-divergence.md`. Key rules:
+
+- **A stash-vs-HEAD diff lies once the branch has moved forward.** It mixes
+  the stash's real edit with all intervening upstream drift, making the
+  stash look like it *deletes* code that was actually *added upstream after*
+  the stash. Always read a stash as `git diff stash@{0}^ stash@{0} -- <paths>`
+  (against its OWN base), never against current `main`.
+- **`hermes update` leaves orphaned autostashes** (`hermes-update-autostash-*`).
+  Always `git stash list` after stash work; old entries can hold unique
+  uncommitted work living on no branch. Inspect before dropping; never
+  blind-drop. Don't drop a stash without explicit user sign-off — once the
+  work is committed to a branch it's durable and the stash is a free backup.
+- **Real fork divergence hides outside committed `main`** (often a clean
+  ancestor of upstream). Enumerate branches' local-only commits, untracked
+  files, orphaned stashes, AND worktrees — not just `git log main`.
+- **Sync sequence:** record rollback SHA → confirm incoming HEAD doesn't
+  track your untracked paths → `git stash push -u` → `git merge --ff-only
+  upstream/main` (refuses if diverged) → `git stash pop` → re-check
+  `git stash list`.
+- **Rescue unique stash work across a moved-forward base** with
+  `git diff stash@{0}^ stash@{0} -- <file> | git apply --3way` onto a new
+  branch off current `main` — never `stash pop` across large drift. First
+  grep the target function on `main` to confirm upstream hasn't already
+  merged the same fix (else the stash is obsolete, don't re-commit a dup).
+
+## Recovering an orphaned local commit (reset/pull dropped a cherry-pick)
+
+For "is my cherry-pick / local commit still on HEAD?" when `git log` doesn't
+show it — a `git reset --hard origin/main` (often buried inside a pull/sync/
+`hermes update`) silently orphaned a local commit, and a running service may no
+longer have the change. See `references/reflog-orphaned-commit-recovery.md`.
+Key moves: `git merge-base --is-ancestor <sha> HEAD` to detect the orphan →
+`git reflog` to find the `reset: moving to origin/main` that dropped it →
+confirm zero upstream changes to the files with `git log <sha>^..HEAD -- <files>`
+→ `git cherry-pick <sha>` to re-apply (new SHA, identical content/message/author
+date) → run the change's test. This is the *recovery* companion to the
+*prevention* rules in `stash-fastforward-fork-divergence.md`.
+
 ## Finishing branch menu
 
 Before presenting finish options:

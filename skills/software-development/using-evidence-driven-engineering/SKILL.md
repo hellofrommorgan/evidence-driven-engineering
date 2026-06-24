@@ -6,7 +6,7 @@ author: Morgan Wilson
 metadata:
   hermes:
     tags: [bootstrap, routing, discipline]
-    related_skills: [intent-alignment, verification-honesty, failure-vocabulary]
+    related_skills: [intent-alignment, falsifiable-goals, verification-honesty, failure-vocabulary, communication-integrity]
 ---
 
 # Using Evidence-Driven Engineering
@@ -20,13 +20,17 @@ Before answering or acting on any software-engineering request that may involve 
 
 | Situation | Load |
 |---|---|
-| User asks for a change and intent has >1 plausible interpretation, or gives an imperative like "fix", "add", "refactor", "make it work" | `intent-alignment` |
+| User asks for a change and intent has >1 plausible interpretation | `intent-alignment` |
+| User gives an imperative like "fix", "add", "refactor", "make it work" | `falsifiable-goals` |
 | Multi-step implementation, config change, migration, feature, or refactor | `design-planning` |
 | Editing existing code | `surgical-changes`; if abstraction/seam/refactor is tempting, also load `architecture-deepening` |
 | Any production-code change where tests are possible | `test-driven-development` |
 | Bug, flaky test, failed build, incident, surprising behavior | `diagnostic-debugging` |
 | Refactor, architecture complaint, testability complaint, pass-through modules | `architecture-deepening` |
-| About to claim completion, or receiving correction / agreeing/disagreeing / responding to praise/blame / review communication | `verification-honesty` |
+| User explicitly says to use EDE/evidence-driven process at every step | Load this skill plus the concrete task skills; maintain a visible task list; collect evidence before and after edits; final must include verification commands/results and known concerns. |
+| User asks to make an architecture/process real in code | `architecture-deepening` → `design-planning` → `test-driven-development` → `surgical-changes` → `verification-honesty`; delegate independent scouts if the scope is large. |
+| About to claim completion | `verification-honesty` |
+| Receiving correction, agreeing/disagreeing, responding to praise/blame, or review communication | `communication-integrity` |
 | Delegating work or preserving controller context | `subagent-orchestration` |
 | Reviewing code or receiving review feedback | `two-stage-code-review` |
 | Git branch/worktree/cleanup/destructive operation | `git-safety-and-guardrails` |
@@ -42,12 +46,12 @@ If a skill applies, you do not summarize it from memory. Use it.
 
 Use the smallest stack that covers the work, in this order:
 
-- Feature/change: `intent-alignment` (pins intent and falsifiable goal) → `design-planning` → `test-driven-development` → `surgical-changes` → `verification-honesty` → `two-stage-code-review`.
+- Feature/change: `intent-alignment` if ambiguous → `falsifiable-goals` → `design-planning` → `test-driven-development` → `surgical-changes` → `verification-honesty` → `two-stage-code-review`.
 - Bug/failed test: `diagnostic-debugging` → `test-driven-development` for regression → `surgical-changes` → `verification-honesty`.
-- Refactor/architecture: `intent-alignment` → `architecture-deepening` → `test-driven-development`/behavior capture → `surgical-changes` → `verification-honesty`.
+- Refactor/architecture: `falsifiable-goals` → `architecture-deepening` → `test-driven-development`/behavior capture → `surgical-changes` → `verification-honesty`.
 - Delegated work: `design-planning` → `subagent-orchestration` → `two-stage-code-review` → controller `verification-honesty`.
 - Git operation: `git-safety-and-guardrails` before any mutating git command; `verification-honesty` before reporting branch readiness.
-- Communication/review response: `verification-honesty`; for code review also `two-stage-code-review`.
+- Communication/review response: `communication-integrity`; for code review also `two-stage-code-review`.
 
 For non-trivial work, final responses include either `Skills used: [...]` or `Skills not used: [reason]`.
 
@@ -70,6 +74,20 @@ When work is delegated or long-running, every worker/status update must be one o
 - `DONE_WITH_CONCERNS`: core task done, concerns listed with severity.
 - `BLOCKED`: cannot proceed; includes exact blocker and recommended next action.
 - `NEEDS_CONTEXT`: missing information; includes a recommended answer or retrieval plan.
+
+## Generated/static control surfaces
+
+When working on a generated static UI that controls a source-of-truth repository or local automation system, use `references/generated-control-surface-closure.md` as a closure checklist. Treat named concerns as falsifiable work items, keep typed intent separate from durable receipt/projection truth, test source-pointer safety, and distinguish dispatch/scheduling from completion in both UI copy and final reports.
+
+For Macrohard-style typed-intent → server-owned runner → checked receipt/projection systems, also use `references/macrohard-surface-simplification-hardening.md`. It captures hardening checks for production revision gates, receipt path containment, recursive authority-key denial, recent-run blocked status, terminal lifecycle fields, checked-receipt vocabulary, and raw-output UI exposure.
+
+When a dispatched action succeeds but the originating card/control does not feel live, use `references/generated-surface-responsive-card-actions.md`: preserve action/unit identity in execution and checked receipts, then add a card-local ephemeral overlay from POST/SSE/run updates before durable reprojection.
+
+When a Macrohard-style surface feels non-responsive after actions like Explain, or a run/toast succeeds without updating the originating card, use `references/macrohard-surface-realtime-receipt-overlays.md`. Preserve run identity into execution/checked receipts, then add a card-local ephemeral overlay fed by run subscriptions while keeping durable projection truth separate.
+
+If the generated surface is technically correct but reads like operational metadata, also use `references/generated-control-surface-copy-cleanup.md`. Lead with operator decisions and demote cron/source/hash/receipt/stderr details into source or technical sections, then verify the generated assets and a live screenshot.
+
+If a generated surface dispatches server-owned runs but feels stale or non-responsive — for example a toast says `explain_unit succeeded` while the originating card does not change — use `references/live-responsive-control-surface.md`. Preserve `unit_id`/`action` through runtime, execution receipt, checked receipt, and projection; add a card-local live overlay from events/status, and keep run IDs/receipt paths out of primary card copy.
 
 ## Verification checklist
 

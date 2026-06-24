@@ -6,7 +6,7 @@ author: Morgan Wilson
 metadata:
   hermes:
     tags: [diff, surgical, yagni, style]
-    related_skills: [intent-alignment, architecture-deepening, verification-honesty]
+    related_skills: [falsifiable-goals, architecture-deepening, verification-honesty]
 ---
 
 # Surgical Changes
@@ -39,6 +39,9 @@ EVERY CHANGED LINE MUST TRACE DIRECTLY TO THE USER'S REQUEST.
 - Configurability not requested.
 - Error handling for impossible scenarios.
 - Deleting pre-existing dead code unless asked.
+- Replacing a user-approved UI/design with a simpler alternate implementation while claiming to preserve it.
+
+If the request says a redesign/prototype is the source of truth, delete or quarantine older alternate UI paths and add a contract test that forbids them from becoming production again.
 
 ## Simplicity gate
 

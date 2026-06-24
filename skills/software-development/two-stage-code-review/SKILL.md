@@ -6,7 +6,7 @@ author: Morgan Wilson
 metadata:
   hermes:
     tags: [review, spec, quality, anti-sycophancy]
-    related_skills: [surgical-changes, verification-honesty]
+    related_skills: [surgical-changes, verification-honesty, communication-integrity]
 ---
 
 # Two-Stage Code Review
@@ -78,7 +78,24 @@ Minor:
 
 ## Receiving review
 
-Technical evaluation, not emotional performance. Follow `verification-honesty` (Communication integrity): evaluate each finding as accepted/rejected/needs-clarification with evidence and an action; never substitute gratitude or approval for evaluation. Push back when the reviewer is wrong — blindly accepting bad feedback is dishonest.
+Technical evaluation, not emotional performance.
+
+Forbidden responses:
+
+- "You're absolutely right!"
+- "Great point!"
+- "Thanks for catching that!"
+- Any gratitude/approval phrase that substitutes for evaluation.
+
+Use:
+
+```text
+Finding accepted/rejected/needs clarification.
+Reason: [technical evidence].
+Action: [fix, no-change, or question].
+```
+
+Push back when the reviewer is wrong. Blindly accepting bad feedback is dishonest.
 
 ## Anti-rationalization table
 
@@ -87,6 +104,7 @@ Technical evaluation, not emotional performance. Follow `verification-honesty` (
 | "Quality review can include spec." | It will miss over/under-building. Spec first. |
 | "The reviewer said it, so fix it." | Evaluate evidence; push back with code/tests when needed. |
 | "Minor nits show diligence." | Nits can create noise; do not block on optional taste. |
+| "Gratitude is polite." | In review, action and evidence are the politeness. |
 
 ## Verification checklist
 

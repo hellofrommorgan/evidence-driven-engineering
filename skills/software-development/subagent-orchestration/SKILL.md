@@ -1,7 +1,7 @@
 ---
 name: subagent-orchestration
 description: "Use when delegating implementation, investigation, review, or parallel work; specifies fresh-context workers, independence checks, status protocol, and reference-not-duplicate handoffs."
-version: 1.0.0
+version: 1.1.0
 author: Morgan Wilson
 metadata:
   hermes:
@@ -55,6 +55,18 @@ Output format: DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT with evidence
 
 Bad work is worse than no work. Workers may stop instead of improvising.
 
+## Delegation config is separate from the main model
+
+Subagents spawn on the `delegation.*` config block, NOT `model.*`. A working main
+model does not guarantee working subagents. If an entire batch fails identically and
+instantly (sub-second, `api_calls: 1`, zero tokens, empty `tool_trace`, often a 400
+`unsupported_api_for_model`), the cause is delegation config/routing, not the task
+prompts — do not rewrite prompts, fix the config. See
+`references/delegation-model-routing-trap.md` for the Copilot GPT-5 `/chat/completions`
+trap, the `hermes config set delegation.model/api_mode` fix, and the note that
+`config.yaml` is write-protected from `patch`/`write_file` (use `hermes config set`).
+Before a large parallel batch, confirm `delegation.model` is one you've seen succeed.
+
 ## Parallelism gate
 
 Parallel only when all are true:
@@ -63,6 +75,15 @@ Parallel only when all are true:
 - Workers will not edit the same files.
 - Each worker can verify without waiting for another.
 - Outputs can be merged or compared by the controller.
+
+For LAUNCHING a large independent build fan-out (5–50 workers each producing an
+artifact), follow `references/large-parallel-fanout-launch.md`: smoke-test one
+agent before firing all N (confirms routing + returns a real path/schema the
+batch needs), lay a shared scaffold first (one umbrella dir, one module subdir
+per agent, pre-written shared tokens/AGENTS.md, agents barred from git so the
+controller commits once), require a per-worker verification bar + fixed greppable
+output marker, reconcile on disk and re-fire only failed lanes, then build the
+capstone index the agents couldn't.
 
 ## Controller reconciliation
 
@@ -73,6 +94,13 @@ Worker outputs are claims until independently inspected. The controller must:
 - Enforce file ownership or worktree strategy before dispatch.
 - Reject overlapping write paths unless explicitly serialized.
 - Resolve incompatible worker findings with a new focused review, not a guess.
+- Treat `DONE_WITH_CONCERNS` as actionable: either verify and fix the concern before finalizing, or state the residual risk explicitly. Reviewers often catch ledger/idempotency bugs even when tests pass.
+- For broad local autonomy / Athena-style work, use the receipt-batch pattern in `references/parallel-local-receipt-batches.md`: per-lane artifacts, per-lane receipt validation, controller verification, and one controller receipt.
+- When a batch already ran in earlier sessions and you need to reconcile or synthesize their final outputs, recover them with SQL against `state.db` instead of re-running the fan-out. See `references/recovering-prior-subagent-outputs.md` (find agents by shared prompt prefix, map themes by grep, pull syntheses by output marker like `FINDINGS:`). This is also why worker prompts should end on a fixed, greppable marker.
+
+## tldraw presentation-readiness worker slate
+
+When orchestrating subagents for tldraw/2D agent-coworking presentation readiness, start with read-only workers for runtime state, browser acceptance, demo story, presenter UX, repo hygiene, build/perf, and presenter ops. See `references/tldraw-presentation-readiness-subagents.md`. Serialize implementation afterward in the order reset/seed → browser smoke → presenter mode → runbook/preflight.
 
 ## Handoff docs
 

@@ -1,12 +1,12 @@
 ---
 name: verification-honesty
-description: "Use before reporting completion/success/readiness/passing status, and when agreeing, disagreeing, receiving corrections, or responding to praise/blame; requires fresh verification evidence and forbids both unverified completion language and performative agreement."
-version: 1.1.0
+description: "Use before reporting completion, success, readiness, or passing status; requires fresh verification evidence in the same message and forbids unverified completion language."
+version: 1.0.0
 author: Morgan Wilson
 metadata:
   hermes:
-    tags: [verification, honesty, completion, evidence, communication, anti-sycophancy]
-    related_skills: [intent-alignment, test-driven-development, diagnostic-debugging, two-stage-code-review, failure-vocabulary]
+    tags: [verification, honesty, completion, evidence]
+    related_skills: [falsifiable-goals, test-driven-development, diagnostic-debugging]
 ---
 
 # Verification Honesty
@@ -60,6 +60,10 @@ Verified with `[command]`: [result].
 
 If verification cannot be run, the final response must start with `Not verified:` before any completion-adjacent claim.
 
+## UI-to-receipt completion claims
+
+For UI controls that trigger server-owned agent/Hermes work, `POST accepted`, `run_id returned`, or a local optimistic UI flag is not completion evidence. Completion requires a durable receipt/status record and, when the UI is generated from a source-of-truth repository, a regeneration/projection check that shows the receipt or changed source state is visible in generated data/history. State this distinction explicitly: accepted/queued proves dispatch only; receipt ingestion proves outcome projection.
+
 ## Evidence examples
 
 | Claim | Evidence |
@@ -70,6 +74,9 @@ If verification cannot be run, the final response must start with `Not verified:
 | Build ready | Build command and result. |
 | Review complete | Files/SHAs reviewed and verdict with severity. |
 | No debug logs remain | grep command for debug prefix returns no matches. |
+| Per-run ledger correct | Multi-run/manual ledger count by run key, not just generated receipt counts. For stable entity IDs, verify `(entity_id, run_date)` or equivalent scoped uniqueness. |
+| Local choice processor idempotent | Re-run the same choice and compare byte hashes/snapshots of ledgers and artifacts; event count alone is insufficient because timestamps can churn. |
+| Local approval state machine safe | Attempt a different choice after a prior local choice and attempt terminal-state regression (e.g. archived → watched); both must fail before mutation with ledgers unchanged. |
 
 ## Regression test proof
 
@@ -89,35 +96,36 @@ For a new regression test, passing once is insufficient when feasible. Prove it 
 | "The command is expensive." | State what was verified and what remains unverified. |
 | "No output means success." | Record command and exit status; inspect logs when relevant. |
 
-## Communication integrity
+## Audit-report truth filtering
 
-Verification governs not just completion claims but how you respond to people. Evaluate claims; do not perform agreement. Cooperation means technical honesty and action, not praise, gratitude, or unsupported confidence. Apply this when the user corrects you, a reviewer makes a claim, you agree or disagree with a proposed shortcut, or you are tempted to say "great", "perfect", "you're right", or "thanks".
+When the user asks to review an audit/report and "only implement the truths":
 
-Don't use these as substitutes for evidence/action:
+1. Treat each report claim as a falsifiable item, not as authority.
+2. Probe or inspect current code before editing.
+3. Add confirmed items to the active goal/QA log before or alongside fixes.
+4. Implement only claims proven true or intentionally accepted as desired behavior.
+5. If a claim is false or stale, do not argue midstream unless the user asked for an immediate verdict; reserve it for the final summary if requested.
+6. For vocabulary/architecture ambiguities that are true concerns but not safe to resolve locally, track them as deferred decisions instead of silently changing contracts.
 
-- "You're absolutely right." / "Great point." / "Good catch."
-- "Thanks for catching that."
-- "Perfect."
-- Any praise/gratitude phrase that replaces a technical response.
+## Local health/autonomy harness claims
 
-This isn't a ban on being civil. It's a ban on emotional performance where engineering evaluation belongs.
+When asked whether a local-first health/autonomy harness is "working now," do not rely only on an older receipt or passing tests. Use `references/local-health-harness-verification.md`: read project-local operator docs, run fresh runner/dashboard/auth/sync/test checks, and distinguish **system health** from **domain health**. A `degraded` health report can be the correct product output rather than an infrastructure failure; inspect the report before summarizing.
 
-Required response shape:
+For More Life autonomy hardening details — cron Python path, command-job receipt evidence, pipeline JSON recovery, and SQLite experiment projection — also use `references/more-life-autonomy-hardening.md`.
 
-```text
-Finding: accepted / rejected / needs clarification.
-Evidence: [file, command, test, spec, or reasoning].
-Action: [fix / no change / question / verification step].
-```
+## Cron-backed local observer / harness status claims
 
-For wrong feedback: `Finding rejected. Evidence: [test/spec/code]. Action: no change; [optional safer alternative].` For a risky shortcut: state the finding, the evidence (what would be unverified/unsafe), and recommend the smallest safe alternative before proceeding.
+When Morgan asks how a local project, observer, watchdog, or receipt-based harness is "running," do not stop at a cron row, one manual script run, or a stale receipt. Use `references/cron-backed-local-observer-verification.md`: verify the scheduler is alive, inspect the installed script/wrapper, check scheduler output records, inspect project-local receipts/artifacts, and when practical wait through one real scheduled tick. Report runtime health, loop behavior, domain findings, safety boundary, repo state, and limits as separate claims.
 
-| Rationalization | Correction |
-|---|---|
-| "Gratitude is polite." | Evidence and action are the useful politeness in engineering work. |
-| "The user praised me, so agree and move on." | Praise does not verify the work. |
-| "The reviewer sounds confident." | Confidence is not evidence. Inspect the claim. |
-| "Pushing back is argumentative." | Evidence-based disagreement protects the user from bad work. |
+For Mind Seed / mind-vault multi-source ingest reviews, also use `references/mind-seed-runtime-review.md`: identify the active vault, enumerate source hooks, separate collection from drain/surface metabolism, inspect heartbeat/backpressure flags, and report git state separately. The common bottleneck is collection working while `_ingested` is above threshold, meaning `/surface` and promotion need attention rather than scheduler/auth/qmd changes.
+
+## Allowlisted operational mutation claims
+
+When a local observer/governor has already classified an operation as allowlisted and Morgan is pushing for execution rather than more proposal artifacts, do not hide behind approval-packet language. Use `references/allowlisted-operational-mutation-governor.md`: confirm the allowlist scope, take the smallest reversible mutation, write a receipt, and verify live state. If you choose not to mutate, state the specific boundary being crossed (credentials, memory, gateway auth, destructive delete, outbound send, etc.), not a vague safety concern.
+
+## Allowlisted operational mutation claims
+
+When a local observer/governor has already classified an operation as allowlisted and Morgan is pushing for execution rather than more proposal artifacts, do not hide behind approval-packet language. Use `references/allowlisted-operational-mutation-governor.md`: confirm the allowlist scope, take the smallest reversible mutation, write a receipt, and verify live state. If you choose not to mutate, state the specific boundary being crossed (credentials, memory, gateway auth, destructive delete, outbound send, etc.), not a vague safety concern.
 
 ## Final response template
 

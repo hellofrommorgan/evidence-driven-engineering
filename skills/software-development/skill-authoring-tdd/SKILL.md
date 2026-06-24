@@ -44,7 +44,14 @@ Skill must block with: TDD/verification gate.
 
 ## GREEN: minimal skill
 
-Write the smallest skill that changes behavior, following the Skill structure below. Its load-bearing parts are the trigger conditions, an iron law or hard gate, a runnable step-by-step process, an anti-rationalization table mapping observed excuses to corrections, and a verification checklist — plus one excellent example only if it earns its space.
+Write the smallest skill that changes behavior:
+
+- Trigger conditions.
+- Iron law or hard gate.
+- Step-by-step runnable process.
+- Anti-rationalization table mapping observed excuses to corrections.
+- Verification checklist.
+- One excellent example if useful.
 
 ## REFACTOR: close loopholes
 
@@ -86,6 +93,10 @@ Keep SKILL.md focused. Move long examples, scripts, or domain references to `ref
 | "More examples are better." | One sharp example beats five diluted examples. |
 | "This rule is obvious." | Obvious rules are the ones agents skip; name the loophole. |
 
+## Cross-profile skill updates
+
+When Morgan asks to update a skill "across all profiles," treat that as explicit authorization to edit profile-local skill copies, not just the active profile. Preserve profile-specific additions while applying the shared rule. See `references/cross-profile-skill-updates.md` for the exact procedure and receipt shape.
+
 ## Verification checklist
 
 - [ ] Description states trigger conditions.
@@ -95,3 +106,4 @@ Keep SKILL.md focused. Move long examples, scripts, or domain references to `ref
 - [ ] Verbatim rationalizations addressed.
 - [ ] Hard gates are agent-runnable.
 - [ ] Skill is shorter than necessary but no shorter than effective.
+- [ ] Cross-profile skill update requests enumerate and verify every target profile copy.

@@ -6,7 +6,7 @@ author: Morgan Wilson
 metadata:
   hermes:
     tags: [debugging, diagnosis, root-cause, feedback-loop]
-    related_skills: [intent-alignment, test-driven-development, verification-honesty, architecture-deepening]
+    related_skills: [falsifiable-goals, test-driven-development, verification-honesty, architecture-deepening]
 ---
 
 # Diagnostic Debugging
@@ -83,6 +83,10 @@ A stopped debugging attempt must produce a `BLOCKED` report containing: loop com
 | "This log will be useful later." | Untagged logs become garbage. Tag and remove. |
 | "One more fix might work." | Three failed fixes means stop and re-evaluate architecture/loop. |
 | "The repro is flaky, so no test." | Improve reproduction rate; nondeterminism is measurable. |
+
+## Cron/research digest repairs
+
+When debugging a failing Hermes cron digest, distinguish the scheduler/runtime layer from the product workflow layer. A stale import/config error may be fixed while the cron still fails because the LLM-generated workflow is brittle. For research/newsletter digests, prefer a deterministic collector plus script-owned wrapper: the collector emits a bounded manifest, an optional Claude Code/Opus pass handles editorial synthesis, deterministic code renders/sends artifacts, and the cron runs in `no_agent` mode with a compact receipt. See `references/cron-research-digest-repair.md`.
 
 ## Verification checklist
 
