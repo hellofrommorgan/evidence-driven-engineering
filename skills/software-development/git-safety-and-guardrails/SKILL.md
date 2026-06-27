@@ -167,6 +167,23 @@ confirm zero upstream changes to the files with `git log <sha>^..HEAD -- <files>
 date) → run the change's test. This is the *recovery* companion to the
 *prevention* rules in `stash-fastforward-fork-divergence.md`.
 
+## Diverged fork / pushing into a repo a parallel session owns
+
+When you go to `git push` and the remote has **diverged** (your branch and `origin/main` both moved past a shared ancestor — `git rev-list --left-right --count origin/main...HEAD` shows nonzero on BOTH sides), STOP. A plain push is correctly rejected; never resolve it by force-push.
+
+- **Diagnose before deciding.** `git log --oneline HEAD..origin/main` (what upstream added) and `git log --oneline origin/main..HEAD` (what you added). Inspect the upstream commits in an isolated worktree (`git worktree add /tmp/x origin/main`) — another agent session may have independently built the SAME features, usually in a richer form.
+- **"Rebase and cull" can cull to zero.** If upstream already supersedes all your local commits, the honest reconciliation is `git reset --hard origin/main` — but FIRST preserve your lineage on a backup branch+tag (local AND pushed: `git push origin loom/work-YYYYMMDD`) so nothing is lost and the reset is reversible.
+- **Never unattended-merge a large divergence onto `main`,** and never force-push over a parallel session's commits. When unsure, push your work as a NEW branch (`git push origin <feature-branch>`) and open a PR — that's always safe and reversible; it touches no shared ref.
+
+## Greening a RED gate on a repo another session is actively working
+
+To fix a broken test/build gate on a repo you don't exclusively own (a parallel agent pushes to its `main`): do it on a branch off `origin/main` in an **isolated worktree**, never on local `main`.
+
+1. `git worktree add -b fix/green-gate /tmp/gatefix origin/main` (local `main` is never touched).
+2. **Reproduce the failure on the pristine checkout first** — prove it's RED before your change, and `git log -S '<symbol>'` to confirm the failing test + the code under test shipped in the SAME commit (RED-on-arrival, a real bug) vs. the test being newer WIP (someone's in-flight work — do NOT "fix" by guessing their intent; report it instead).
+3. Make the **minimal** fix the tests fully determine; clean up now-unused locals so the diff is tight; secret-scan changed files.
+4. Push the branch + open a PR (`gh pr create --base main --head fix/green-gate`). Verify `main` is byte-identical before/after (`git rev-parse main origin/main`), then `git worktree remove --force`.
+
 ## Finishing branch menu
 
 Before presenting finish options:

@@ -67,6 +67,19 @@ trap, the `hermes config set delegation.model/api_mode` fix, and the note that
 `config.yaml` is write-protected from `patch`/`write_file` (use `hermes config set`).
 Before a large parallel batch, confirm `delegation.model` is one you've seen succeed.
 
+## MoA model as a delegate (not a subagent)
+
+A separate delegation vehicle: run `hermes chat -q --provider moa --model <preset>`
+to get a Mixture-of-Agents model (aggregator + reference) to produce a single
+deliverable — useful for *model diversity on one artifact* or dogfooding the MoA
+path. Key constraint: `hermes chat -q` is a **bounded one-shot turn** and MoA
+makes two model passes, so **pure-generation shapes work** (inline the real
+file/interfaces, ask for the full rewrite in one code block) but **multi-step
+in-place tool edits get cut short** (you find an empty `git diff`). Background it
+(runs >60s), extract the code block, apply it yourself, and verify with the real
+compiler/tests — the MoA output is a claim until the gates pass. Full recipe,
+the turn-loop limit, and the worked example: `references/moa-model-as-delegate.md`.
+
 ## Parallelism gate
 
 Parallel only when all are true:
