@@ -1,7 +1,7 @@
 ---
 name: subagent-orchestration
 description: "Use when delegating implementation, investigation, review, or parallel work; specifies fresh-context workers, independence checks, status protocol, and reference-not-duplicate handoffs."
-version: 1.1.0
+version: 1.0.0
 author: Morgan Wilson
 metadata:
   hermes:
@@ -67,19 +67,6 @@ trap, the `hermes config set delegation.model/api_mode` fix, and the note that
 `config.yaml` is write-protected from `patch`/`write_file` (use `hermes config set`).
 Before a large parallel batch, confirm `delegation.model` is one you've seen succeed.
 
-## MoA model as a delegate (not a subagent)
-
-A separate delegation vehicle: run `hermes chat -q --provider moa --model <preset>`
-to get a Mixture-of-Agents model (aggregator + reference) to produce a single
-deliverable — useful for *model diversity on one artifact* or dogfooding the MoA
-path. Key constraint: `hermes chat -q` is a **bounded one-shot turn** and MoA
-makes two model passes, so **pure-generation shapes work** (inline the real
-file/interfaces, ask for the full rewrite in one code block) but **multi-step
-in-place tool edits get cut short** (you find an empty `git diff`). Background it
-(runs >60s), extract the code block, apply it yourself, and verify with the real
-compiler/tests — the MoA output is a claim until the gates pass. Full recipe,
-the turn-loop limit, and the worked example: `references/moa-model-as-delegate.md`.
-
 ## Parallelism gate
 
 Parallel only when all are true:
@@ -88,15 +75,6 @@ Parallel only when all are true:
 - Workers will not edit the same files.
 - Each worker can verify without waiting for another.
 - Outputs can be merged or compared by the controller.
-
-For LAUNCHING a large independent build fan-out (5–50 workers each producing an
-artifact), follow `references/large-parallel-fanout-launch.md`: smoke-test one
-agent before firing all N (confirms routing + returns a real path/schema the
-batch needs), lay a shared scaffold first (one umbrella dir, one module subdir
-per agent, pre-written shared tokens/AGENTS.md, agents barred from git so the
-controller commits once), require a per-worker verification bar + fixed greppable
-output marker, reconcile on disk and re-fire only failed lanes, then build the
-capstone index the agents couldn't.
 
 ## Controller reconciliation
 
@@ -107,9 +85,13 @@ Worker outputs are claims until independently inspected. The controller must:
 - Enforce file ownership or worktree strategy before dispatch.
 - Reject overlapping write paths unless explicitly serialized.
 - Resolve incompatible worker findings with a new focused review, not a guess.
+- When a worker contradicts YOUR own prior finding, re-verify from ground truth before conceding or overriding — both can be wrong. Filesystem claims (copy vs symlink, byte-identical, diverged) are cheap to settle directly: `inode`/`readlink`, `md5`, `git rev-parse HEAD` on both, `diff -rq` — never relay a copy/dup/identical claim that a one-line check would confirm or refute. (Session: subagent "more-life is a symlink" overturned my "true copy" inode misread; I confirmed via readlink before deduping.)
 - Treat `DONE_WITH_CONCERNS` as actionable: either verify and fix the concern before finalizing, or state the residual risk explicitly. Reviewers often catch ledger/idempotency bugs even when tests pass.
 - For broad local autonomy / Athena-style work, use the receipt-batch pattern in `references/parallel-local-receipt-batches.md`: per-lane artifacts, per-lane receipt validation, controller verification, and one controller receipt.
-- When a batch already ran in earlier sessions and you need to reconcile or synthesize their final outputs, recover them with SQL against `state.db` instead of re-running the fan-out. See `references/recovering-prior-subagent-outputs.md` (find agents by shared prompt prefix, map themes by grep, pull syntheses by output marker like `FINDINGS:`). This is also why worker prompts should end on a fixed, greppable marker.
+
+## tldraw presentation-readiness worker slate
+
+When orchestrating subagents for tldraw/2D agent-coworking presentation readiness, start with read-only workers for runtime state, browser acceptance, demo story, presenter UX, repo hygiene, build/perf, and presenter ops. See `references/tldraw-presentation-readiness-subagents.md`. Serialize implementation afterward in the order reset/seed → browser smoke → presenter mode → runbook/preflight.
 
 ## tldraw presentation-readiness worker slate
 

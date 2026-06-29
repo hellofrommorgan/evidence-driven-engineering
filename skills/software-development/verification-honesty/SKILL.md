@@ -95,6 +95,7 @@ For a new regression test, passing once is insufficient when feasible. Prove it 
 | "The change is small." | Small unverified claims are still unverified. |
 | "The command is expensive." | State what was verified and what remains unverified. |
 | "No output means success." | Record command and exit status; inspect logs when relevant. |
+| "166 tests pass." | Did they pass only because I hand-set an env var/cwd/flag? Re-run as the real entrypoint runs. Rig-green ≠ real-green — see `references/test-rig-vs-real-path-green.md`. |
 
 ## Audit-report truth filtering
 

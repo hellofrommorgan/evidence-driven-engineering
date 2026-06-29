@@ -122,6 +122,8 @@ When evaluating or simplifying CLI-first multi-agent systems, do not replace com
 
 When the user wants maximal simplification under the assumption that frontier coding agents will soon handle most supervision themselves, demote the system from “agent OS” to “folder harness”: the agentic CLI of choice supervises, while `.agent/tasks`, `.agent/runs`, `.agent/receipts`, `.agent/messages`, and `.agent/state` provide durable breadcrumbs, receipts, and 10-15 minute steering packets. Use `references/frontier-agent-folder-harness.md`. When that harness needs to graduate into weeks/months of real project progress, use `references/all-gas-no-brakes-macrohard-target.md`: prove the file-only loop first, add anti-churn task scoring and steering packets, then choose a real target and create an external checkable operation map before editing the target repo.
 
+When extracting one shared module out of N "duplicate" copies (dedup floor/engine/config), use `references/shared-module-extraction.md`: re-measure the byte-identical claim yourself (audits go stale — they're often a superset, not equals), beware `Path(__file__).resolve()` following a symlink to the wrong sibling data file, and exercise the bare entrypoint import with no test scaffold so pytest-green can't hide a broken default path.
+
 ## Anti-rationalization table
 
 | Rationalization | Correction |
