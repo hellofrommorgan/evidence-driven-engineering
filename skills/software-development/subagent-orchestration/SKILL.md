@@ -1,7 +1,7 @@
 ---
 name: subagent-orchestration
 description: "Use when delegating implementation, investigation, review, or parallel work; specifies fresh-context workers, independence checks, status protocol, and reference-not-duplicate handoffs."
-version: 1.0.0
+version: 1.1.0
 author: Morgan Wilson
 metadata:
   hermes:
@@ -67,6 +67,35 @@ trap, the `hermes config set delegation.model/api_mode` fix, and the note that
 `config.yaml` is write-protected from `patch`/`write_file` (use `hermes config set`).
 Before a large parallel batch, confirm `delegation.model` is one you've seen succeed.
 
+## MoA model as a delegate (not a subagent)
+
+A separate delegation vehicle: run `hermes chat -q --provider moa --model <preset>`
+to get a Mixture-of-Agents model (aggregator + reference) to produce a single
+deliverable — useful for *model diversity on one artifact* or dogfooding the MoA
+path. Key constraint: `hermes chat -q` is a **bounded one-shot turn** and MoA
+makes two model passes, so **pure-generation shapes work** (inline the real
+file/interfaces, ask for the full rewrite in one code block) but **multi-step
+in-place tool edits get cut short** (you find an empty `git diff`). Background it
+(runs >60s), extract the code block, apply it yourself, and verify with the real
+compiler/tests — the MoA output is a claim until the gates pass. Full recipe,
+the turn-loop limit, and the worked example: `references/moa-model-as-delegate.md`.
+
+## Timeout-without-summary: salvage, never trust, never re-run blind
+
+A leaf delegate that hits its wall-clock cap returns **status=timeout with NO summary** — the worker died mid-task, so there is no self-report to act on. This is distinct from `BLOCKED` (a clean stop with a reason). The hard cap is `delegation.child_timeout_seconds` (commonly **1200s / 20 min** for leaf workers — NOT arbitrary multi-hour runtimes). A prompt that says "work continuously for 2 hours" in one leaf delegate WILL hit the cap and time out with work stranded mid-flight.
+
+When a delegate times out:
+1. **Do NOT trust any prior self-report** — on timeout there is none. Do NOT assume the task failed *or* succeeded.
+2. **Salvage from disk directly**, then verify: `git status --short` (what files changed), run the test suite (did its edits stay green), `ls -newermt '<dispatch time>'` / search for artifacts (what measurement/output actually landed). Partial work is usually real and reusable — the worker may have finished early phases (code edits, tests) before dying on a later phase (long measurement, end-to-end runs).
+3. **Re-dispatch only the UNFINISHED phases**, not the whole task. Pre-completed phases are on disk; re-running them wastes the next budget too.
+
+**Prevention — match the work to the cap:**
+- For long multi-phase work, either **raise the cap** (`hermes config set delegation.child_timeout_seconds <N>`; verify it persisted as a real int with `yaml.safe_load`) **before** dispatching, or **split into parallel independent leaf delegates** (each ≤ the cap, own output dir) rather than one serial long-runner.
+- For genuinely durable multi-hour work that must outlive the turn, prefer a **cronjob or `terminal(background=True, notify_on_complete=True)`** over a single long leaf delegate — delegates are not durable and are wall-clock-capped.
+- Scope each delegate so its slowest phase fits comfortably inside the cap with headroom; "it might take 60–120 min" against a 20-min cap is a guaranteed timeout.
+
+Full salvage recipe, the disk-forensics commands, and the phase-split dispatch pattern: `references/delegate-timeout-salvage.md`.
+
 ## Parallelism gate
 
 Parallel only when all are true:
@@ -75,6 +104,15 @@ Parallel only when all are true:
 - Workers will not edit the same files.
 - Each worker can verify without waiting for another.
 - Outputs can be merged or compared by the controller.
+
+For LAUNCHING a large independent build fan-out (5–50 workers each producing an
+artifact), follow `references/large-parallel-fanout-launch.md`: smoke-test one
+agent before firing all N (confirms routing + returns a real path/schema the
+batch needs), lay a shared scaffold first (one umbrella dir, one module subdir
+per agent, pre-written shared tokens/AGENTS.md, agents barred from git so the
+controller commits once), require a per-worker verification bar + fixed greppable
+output marker, reconcile on disk and re-fire only failed lanes, then build the
+capstone index the agents couldn't.
 
 ## Controller reconciliation
 
@@ -85,13 +123,9 @@ Worker outputs are claims until independently inspected. The controller must:
 - Enforce file ownership or worktree strategy before dispatch.
 - Reject overlapping write paths unless explicitly serialized.
 - Resolve incompatible worker findings with a new focused review, not a guess.
-- When a worker contradicts YOUR own prior finding, re-verify from ground truth before conceding or overriding — both can be wrong. Filesystem claims (copy vs symlink, byte-identical, diverged) are cheap to settle directly: `inode`/`readlink`, `md5`, `git rev-parse HEAD` on both, `diff -rq` — never relay a copy/dup/identical claim that a one-line check would confirm or refute. (Session: subagent "more-life is a symlink" overturned my "true copy" inode misread; I confirmed via readlink before deduping.)
 - Treat `DONE_WITH_CONCERNS` as actionable: either verify and fix the concern before finalizing, or state the residual risk explicitly. Reviewers often catch ledger/idempotency bugs even when tests pass.
 - For broad local autonomy / Athena-style work, use the receipt-batch pattern in `references/parallel-local-receipt-batches.md`: per-lane artifacts, per-lane receipt validation, controller verification, and one controller receipt.
-
-## tldraw presentation-readiness worker slate
-
-When orchestrating subagents for tldraw/2D agent-coworking presentation readiness, start with read-only workers for runtime state, browser acceptance, demo story, presenter UX, repo hygiene, build/perf, and presenter ops. See `references/tldraw-presentation-readiness-subagents.md`. Serialize implementation afterward in the order reset/seed → browser smoke → presenter mode → runbook/preflight.
+- When a batch already ran in earlier sessions and you need to reconcile or synthesize their final outputs, recover them with SQL against `state.db` instead of re-running the fan-out. See `references/recovering-prior-subagent-outputs.md` (find agents by shared prompt prefix, map themes by grep, pull syntheses by output marker like `FINDINGS:`). This is also why worker prompts should end on a fixed, greppable marker.
 
 ## tldraw presentation-readiness worker slate
 
