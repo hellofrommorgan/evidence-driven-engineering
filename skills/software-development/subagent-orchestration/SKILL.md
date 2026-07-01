@@ -96,6 +96,29 @@ When a delegate times out:
 
 Full salvage recipe, the disk-forensics commands, and the phase-split dispatch pattern: `references/delegate-timeout-salvage.md`.
 
+## Background delegate that never returns in time: don't block, self-verify the load-bearing claim
+
+`delegate_task` runs in the **background** — its result re-enters the conversation as a *later*
+message, on the worker's own clock, with no guarantee it arrives before you reach the step that
+needed it. This is distinct from a timeout (worker died) and from BLOCKED (clean stop): the lane
+is simply still in flight, or its completion message lands after you've already had to act. The
+trap is treating a dispatched verification lane as a dependency you must wait on.
+
+Rule: **when you delegate verification of a claim you yourself can check at primary source, the
+delegate is an optimization, not a gate.** Dispatch it, keep working, and if you reach the
+load-bearing moment (e.g. send time) before it returns, verify the highest-stakes claims yourself
+with a direct `web_extract`/`web_search`/`gh api`/`curl` and proceed. The deliverable must never
+depend on an unreturned subagent self-report.
+- Only the claims that are *both* load-bearing *and* not independently checkable justify actually
+  waiting on a delegate. For everything else, the controller's own primary-source check is faster
+  and more trustworthy than the subagent summary would have been anyway.
+- Don't re-dispatch a still-running lane because it's "quiet" — that just doubles the work. Either
+  verify it yourself or note it as unconfirmed-but-non-blocking in the run note.
+- Worked example: a momentum-brief run dispatched two background source-verification lanes
+  (paper venue, npm publication); neither re-entered before send. The controller verified the two
+  highest-stakes claims directly (fetched the ACL Anthology page; hit the npm registry) and the
+  two council critics independently re-verified the rest, so the unreturned lanes cost nothing.
+
 ## Parallelism gate
 
 Parallel only when all are true:
