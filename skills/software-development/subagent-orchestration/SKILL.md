@@ -119,6 +119,66 @@ depend on an unreturned subagent self-report.
   highest-stakes claims directly (fetched the ACL Anthology page; hit the npm registry) and the
   two council critics independently re-verified the rest, so the unreturned lanes cost nothing.
 
+## Standing-goal / session re-entry: prior background lanes are GONE — reconcile from disk
+
+Background `delegate_task` workers are **not durable across a session boundary**. When a
+standing-goal prompt re-enters (a fresh session continuing the same objective), `/new` is run,
+or the parent process exits, every still-in-flight background delegate is **discarded** — it will
+never re-enter the conversation, even though you dispatched it last turn. This is distinct from
+"returns late" (same session, worker still alive) and from timeout (worker died mid-task): here
+the lane simply no longer exists.
+
+Rule on any standing-goal/continuation re-entry: **treat all previously-dispatched background
+lanes as gone until disk proves otherwise.** Do not wait on them. Reconcile actual state from
+primary sources before taking the next step:
+- `git ls-remote origin '<expected-branch>'` and `gh pr list --state open` — did the lane push a
+  branch / open a PR, or leave nothing?
+- A discarded delegate often leaves a **created-but-empty branch** (it ran `git checkout -b` before
+  being killed). `git log main..<branch> --oneline` empty + no target file on the branch = discarded
+  with zero work. Delete the empty branch and rebuild.
+- If the discarded lane was on the **critical path** (blocks everything downstream), **build that
+  one module directly yourself** rather than re-dispatching — a single well-specified blocker is
+  faster first-hand than another dispatch+verify round-trip, and it unblocks the next fan-out
+  immediately. Re-dispatch is for the independent, non-blocking lanes.
+- For work that MUST survive across sessions, don't use `delegate_task` at all — use a cronjob or
+  `terminal(background=True, notify_on_complete=True)`, which outlive the turn.
+
+## Wave-based dependency-DAG builds (issue→PR tracked)
+
+For a multi-module build with a real dependency DAG (a package + modules, or a core lib + vertical
+apps on top), don't fan out everything at once and don't serialize everything. Dispatch in **waves**,
+where a wave = the set of modules whose dependencies are already **merged and green**:
+
+1. **Wave 0 — foundations.** Dispatch the dependency-free modules (data loaders, value types) in
+   parallel. Modules in *sibling* repos that don't yet depend on each other are also Wave 0.
+2. **Merge gate between waves.** A downstream module cannot start until its deps are on `main`. So
+   the controller acts as a **verifying reviewer**: for each returned PR, checkout the branch,
+   re-run the real suite, confirm the code is real (not a stub) and the issue is linked, then
+   squash-merge. Only then does the next wave's dependency set expand.
+3. **Wave N — fan out the newly-unblocked independent middle layer in parallel**, then finish with
+   the **sequential capstone** (compose/integration modules that depend on everything).
+
+Discipline that makes this work unattended:
+- **One issue → one branch (`feat/<slug>`) → one PR that `Closes #N`.** Open all issues up front,
+  1:1 with the module DAG cards, in dependency order, so delegate prompts can reference stable issue
+  numbers and the merged history is auditable.
+- **Every delegate prompt carries the same spine:** read the vision/goal docs first; the exact
+  files it may touch (module + its test + the `__init__` re-export, nothing else); the exact test
+  command incl. the project's own interpreter/venv; and the full issue→branch→PR→`Closes #N` flow
+  with real pytest output pasted in the PR body.
+- **Fold council/architecture refinements into the issue as a comment BEFORE the module builds** —
+  `gh issue comment <n>` — so the binding design change reaches the worker that implements it.
+- **Verify from a clean clone using the project's OWN toolchain.** Re-running the suite from HEAD in
+  a fresh clone is correct discipline, but it MUST use the project's interpreter/venv (e.g. the repo's
+  `uv venv --python 3.12`), not an ad-hoc `python3 -m venv` — a wrong interpreter produces a *false*
+  failure (e.g. `dataclass() got an unexpected keyword` on `slots=True` under an older Python) that
+  looks like a real bug and wastes a debugging cycle. Match the harness to the project before trusting
+  a red result.
+
+Full worked sequence (3-repo legal-screened build: toolmaker core + two vertical apps, 25 issues,
+foundation→parallel-middle→capstone waves, the session-boundary discard recovery, and the
+clean-clone false-failure): `references/wave-based-dependency-dag-builds.md`.
+
 ## Parallelism gate
 
 Parallel only when all are true:
