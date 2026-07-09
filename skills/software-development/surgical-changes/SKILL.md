@@ -56,6 +56,30 @@ Before finalizing a diff, ask:
 
 Before final response, run or inspect the actual diff (`git diff`, `git diff --stat`, or the harness equivalent) and cite the changed files reviewed. Don't rely on memory of edits.
 
+### A `"success": true` from the edit tool is NOT proof the file is valid
+
+A fuzzy find-and-replace (`patch`/apply-patch/sed-like tools) can report success while
+silently corrupting the file — most commonly when the `old_string`/`new_string` span
+**multiple adjacent lines of an implicit string concatenation** (Python `"a" "b"`,
+JS template chunks, C string literals). The matcher can inject a stray escaped quote
+(`\"`) or drop a terminator at a line boundary, producing `SyntaxError: unterminated
+string literal` (or the language's equivalent) on lines the diff *looked* clean on.
+Real example this session: three `patch` calls to a Python builder each returned
+`success`, but two injected `"…to Claude to \"` at the concatenation seam → the build
+would not import.
+
+Defenses (do at least the first two):
+1. **Compile/parse after every batch of edits**, not just at the end:
+   `python3 -c "import ast; ast.parse(open('f.py').read())"` (or `node --check`,
+   `bash -n`, `tsc --noEmit`, the project linter). The auto-lint some tools emit on
+   write is the same signal — read it; a lint error there means the edit is broken now.
+2. **Grep for the corruption signature** the tool tends to leave, e.g.
+   `grep -n '\\"),$' file.py` for stray escaped-quote line-ends after editing a file
+   full of escaped quotes.
+3. If a fuzzy patch keeps drifting on an escaped-quote-heavy region (error mentions
+   "escape-drift" or "literal sequence `\\\"`"), **stop patching and rewrite the whole
+   file with `write_file`** — many small patches into that region compound the damage.
+
 Produce a trace table for every non-trivial diff; for tiny diffs include a one-sentence trace:
 
 | Changed file/region | Reason tied to request |
