@@ -46,6 +46,18 @@ Verification: [exact evidence required]
 Output format: DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT with evidence.
 ```
 
+## Direct-profile worker completion marker
+
+When launching a durable profile worker with `hermes chat --profile <name> -q ...`,
+redirect its full output to a file and require a fixed terminal marker (`DONE`,
+`BLOCKED`, etc.). A shell/background process that exits after printing only the
+query, `Initializing agent`, or a few tool calls has **not returned a result** even
+if the process wrapper reports completion. Inspect the captured log before acting.
+If there is no marker and no verified side effect, retry the smallest unfinished
+slice as a bounded foreground run; this preserves full tool output and prevents a
+silent background exit from being mistaken for success. If side effects did land,
+salvage and verify them rather than rerunning blindly.
+
 ## Status protocol
 
 - `DONE`: include files changed and verification evidence.
