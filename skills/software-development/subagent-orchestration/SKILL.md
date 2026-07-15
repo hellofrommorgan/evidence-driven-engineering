@@ -58,6 +58,14 @@ slice as a bounded foreground run; this preserves full tool output and prevents 
 silent background exit from being mistaken for success. If side effects did land,
 salvage and verify them rather than rerunning blindly.
 
+This applies equally to **background reviewer/critic CLI runs** that redirect stdout to a
+file (for example `copilot --model … > critique.txt`). A process can exit and leave a file
+that contains only tool-read traces or a partial transcript, with NO actual verdict. For
+review/critique lanes, require a fixed verdict marker such as `Verdict: SEND` /
+`Verdict: REVISE`. If the file lacks that marker, treat the lane as incomplete even if the
+process wrapper says `exited`; rerun the smallest critique slice in the foreground and use
+that result, not the partial file.
+
 ## Status protocol
 
 - `DONE`: include files changed and verification evidence.
