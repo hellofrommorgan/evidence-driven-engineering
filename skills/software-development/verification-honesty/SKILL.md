@@ -64,6 +64,18 @@ If verification cannot be run, the final response must start with `Not verified:
 
 For UI controls that trigger server-owned agent/Hermes work, `POST accepted`, `run_id returned`, or a local optimistic UI flag is not completion evidence. Completion requires a durable receipt/status record and, when the UI is generated from a source-of-truth repository, a regeneration/projection check that shows the receipt or changed source state is visible in generated data/history. State this distinction explicitly: accepted/queued proves dispatch only; receipt ingestion proves outcome projection.
 
+## Run completion is not product value
+
+Fresh verification can prove that a run completed correctly while leaving the system's usefulness entirely unproven. Keep these claims separate:
+
+- **Execution claim:** code ran, tests passed, a file changed, a receipt was checked, or state projected.
+- **Outcome claim:** a named consumer used the output and a valuable external state changed.
+- **Durability claim:** the outcome repeated independently with acceptable maintenance and cost.
+
+Never infer the latter two from the first. When evidence stops at internal correctness, say `verified mechanism; consumption/external consequence not verified` and call the artifact a prototype or harness rather than a working product. For agent-system and portfolio audits, use the `agent-system-simplification` reference `references/tool-shaped-object-outcome-audit.md`.
+
+High-risk proxy traps include hashes, file counts, schema-complete but empty logs, card status, process exits, self-owned sandbox interactions, generated tests, unresolved verdict queues, and dashboards that only display the system's own activity.
+
 ## Evidence examples
 
 | Claim | Evidence |
