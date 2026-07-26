@@ -124,10 +124,6 @@ For Mind Seed / mind-vault multi-source ingest reviews, also use `references/min
 
 When a local observer/governor has already classified an operation as allowlisted and Morgan is pushing for execution rather than more proposal artifacts, do not hide behind approval-packet language. Use `references/allowlisted-operational-mutation-governor.md`: confirm the allowlist scope, take the smallest reversible mutation, write a receipt, and verify live state. If you choose not to mutate, state the specific boundary being crossed (credentials, memory, gateway auth, destructive delete, outbound send, etc.), not a vague safety concern.
 
-## Allowlisted operational mutation claims
-
-When a local observer/governor has already classified an operation as allowlisted and Morgan is pushing for execution rather than more proposal artifacts, do not hide behind approval-packet language. Use `references/allowlisted-operational-mutation-governor.md`: confirm the allowlist scope, take the smallest reversible mutation, write a receipt, and verify live state. If you choose not to mutate, state the specific boundary being crossed (credentials, memory, gateway auth, destructive delete, outbound send, etc.), not a vague safety concern.
-
 ## Final response template
 
 ```text
