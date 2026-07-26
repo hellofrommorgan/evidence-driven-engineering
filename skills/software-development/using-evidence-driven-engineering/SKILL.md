@@ -75,6 +75,14 @@ When work is delegated or long-running, every worker/status update must be one o
 - `BLOCKED`: cannot proceed; includes exact blocker and recommended next action.
 - `NEEDS_CONTEXT`: missing information; includes a recommended answer or retrieval plan.
 
+## Compounding seam
+
+When a completed, verified task surfaced a durable non-obvious lesson — a bug class, convention, or protocol that would change how a future agent works — append it to the most relevant existing SKILL.md section or its `references/` file. At most one rule per task; route the edit through `skill-authoring-tdd`; session-specific detail stays out. This is the library's only learning-persistence mechanism — do not invent parallel rule files.
+
+## Missing references policy
+
+Skills cite `references/*.md` learning notes that live in the source workspace and may not all be synced into this library. If a cited reference is absent, proceed using the inline summary in the skill and state that the reference was unavailable. Never fabricate or guess the contents of a missing reference.
+
 ## Generated/static control surfaces
 
 When working on a generated static UI that controls a source-of-truth repository or local automation system, use `references/generated-control-surface-closure.md` as a closure checklist. Treat named concerns as falsifiable work items, keep typed intent separate from durable receipt/projection truth, test source-pointer safety, and distinguish dispatch/scheduling from completion in both UI copy and final reports.

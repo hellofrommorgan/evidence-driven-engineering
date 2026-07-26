@@ -44,12 +44,36 @@ Block or require explicit human confirmation for:
 
 ## Runnable guardrail script
 
-Use `scripts/block-dangerous-git.sh` as the runnable guardrail. Install it in the harness PreToolUse hook when supported. If the harness cannot run hooks, source/wrap it in the shell before issuing destructive git commands.
+Use `scripts/block-dangerous-git.sh` as the runnable guardrail. It runs in two modes:
+
+- **Hook mode (preferred):** as a Claude Code PreToolUse hook it reads the tool-call JSON on stdin, extracts `.tool_input.command`, and exits `2` to block; stderr becomes the block reason shown to the agent.
+- **CLI mode:** pass the command as `$1` or in `COMMAND`; any non-zero exit blocks. Use this to wrap destructive git commands in shells where the harness cannot run hooks.
+
+Register the hook in `.claude/settings.json` (or user settings):
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /absolute/path/to/skills/software-development/git-safety-and-guardrails/scripts/block-dangerous-git.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
 
 Check/install protocol:
 
 1. Check whether the harness supports PreToolUse or command hooks.
-2. If supported, register `scripts/block-dangerous-git.sh` and verify it blocks a harmless dry-run string such as `git reset --hard`.
+2. If supported, register the script and verify hook mode blocks a harmless dry-run:
+   `echo '{"tool_input":{"command":"git reset --hard"}}' | bash scripts/block-dangerous-git.sh` must print a block message and exit `2`.
 3. If unsupported, state `Hook unavailable because: [reason]` and use the fallback confirmation protocol below.
 
 ## Fallback confirmation protocol

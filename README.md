@@ -42,5 +42,7 @@ Start with `using-evidence-driven-engineering`.
 ## Files
 
 - Skills: `skills/software-development/*/SKILL.md`
-- Git guard script: `skills/software-development/git-safety-and-guardrails/scripts/block-dangerous-git.sh`
+- Git guard script: `skills/software-development/git-safety-and-guardrails/scripts/block-dangerous-git.sh` (PreToolUse hook + CLI guard; see the skill for registration)
 - Manifest: `manifest.json`
+
+Some skills cite `references/*.md` learning notes that live in the source workspace and are not synced here; see the missing-references policy in `using-evidence-driven-engineering`.

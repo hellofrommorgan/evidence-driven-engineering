@@ -3,7 +3,7 @@
     "name": "architecture-deepening",
     "path": "skills/software-development/architecture-deepening/SKILL.md",
     "description_len": 176,
-    "chars": 3243,
+    "chars": 13402,
     "related": [
       "intent-alignment",
       "surgical-changes",
@@ -14,7 +14,7 @@
     "name": "design-planning",
     "path": "skills/software-development/design-planning/SKILL.md",
     "description_len": 165,
-    "chars": 3648,
+    "chars": 18219,
     "related": [
       "intent-alignment",
       "subagent-orchestration",
@@ -25,7 +25,7 @@
     "name": "diagnostic-debugging",
     "path": "skills/software-development/diagnostic-debugging/SKILL.md",
     "description_len": 202,
-    "chars": 3258,
+    "chars": 3876,
     "related": [
       "intent-alignment",
       "test-driven-development",
@@ -37,7 +37,7 @@
     "name": "failure-vocabulary",
     "path": "skills/software-development/failure-vocabulary/SKILL.md",
     "description_len": 217,
-    "chars": 2563,
+    "chars": 2566,
     "related": [
       "intent-alignment",
       "verification-honesty"
@@ -47,7 +47,7 @@
     "name": "git-safety-and-guardrails",
     "path": "skills/software-development/git-safety-and-guardrails/SKILL.md",
     "description_len": 202,
-    "chars": 3853,
+    "chars": 10411,
     "related": [
       "verification-honesty",
       "failure-vocabulary"
@@ -56,8 +56,8 @@
   {
     "name": "intent-alignment",
     "path": "skills/software-development/intent-alignment/SKILL.md",
-    "description_len": 287,
-    "chars": 6192,
+    "description_len": 181,
+    "chars": 4387,
     "related": [
       "failure-vocabulary",
       "design-planning",
@@ -70,7 +70,7 @@
     "name": "skill-authoring-tdd",
     "path": "skills/software-development/skill-authoring-tdd/SKILL.md",
     "description_len": 198,
-    "chars": 3634,
+    "chars": 3984,
     "related": [
       "using-evidence-driven-engineering",
       "verification-honesty",
@@ -81,7 +81,7 @@
     "name": "subagent-orchestration",
     "path": "skills/software-development/subagent-orchestration/SKILL.md",
     "description_len": 185,
-    "chars": 4301,
+    "chars": 18627,
     "related": [
       "design-planning",
       "two-stage-code-review",
@@ -93,7 +93,7 @@
     "name": "surgical-changes",
     "path": "skills/software-development/surgical-changes/SKILL.md",
     "description_len": 141,
-    "chars": 3293,
+    "chars": 5162,
     "related": [
       "intent-alignment",
       "architecture-deepening",
@@ -104,7 +104,7 @@
     "name": "test-driven-development",
     "path": "skills/software-development/test-driven-development/SKILL.md",
     "description_len": 176,
-    "chars": 3618,
+    "chars": 8747,
     "related": [
       "intent-alignment",
       "surgical-changes",
@@ -116,7 +116,7 @@
     "name": "triage-queue-management",
     "path": "skills/software-development/triage-queue-management/SKILL.md",
     "description_len": 180,
-    "chars": 2705,
+    "chars": 2708,
     "related": [
       "intent-alignment",
       "failure-vocabulary",
@@ -127,7 +127,7 @@
     "name": "two-stage-code-review",
     "path": "skills/software-development/two-stage-code-review/SKILL.md",
     "description_len": 176,
-    "chars": 2960,
+    "chars": 3160,
     "related": [
       "surgical-changes",
       "verification-honesty"
@@ -137,7 +137,7 @@
     "name": "using-evidence-driven-engineering",
     "path": "skills/software-development/using-evidence-driven-engineering/SKILL.md",
     "description_len": 179,
-    "chars": 4879,
+    "chars": 8579,
     "related": [
       "intent-alignment",
       "verification-honesty",
@@ -147,8 +147,8 @@
   {
     "name": "verification-honesty",
     "path": "skills/software-development/verification-honesty/SKILL.md",
-    "description_len": 264,
-    "chars": 4883,
+    "description_len": 172,
+    "chars": 7466,
     "related": [
       "intent-alignment",
       "test-driven-development",
