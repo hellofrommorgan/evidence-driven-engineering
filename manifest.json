@@ -148,7 +148,7 @@
     "name": "verification-honesty",
     "path": "skills/software-development/verification-honesty/SKILL.md",
     "description_len": 172,
-    "chars": 7466,
+    "chars": 8572,
     "related": [
       "intent-alignment",
       "test-driven-development",
